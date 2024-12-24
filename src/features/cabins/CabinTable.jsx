@@ -1,15 +1,18 @@
+import { useSearchParams } from "react-router-dom";
+
 import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 import { useCabins } from "./useCabins";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
-import { useSearchParams } from "react-router-dom";
+import Empty from "../../ui/Empty";
 
 export default function CabinTable() {
   const { isLoading, cabins } = useCabins();
   const [searchParams] = useSearchParams();
 
   if (isLoading) return <Spinner />;
+  if (!cabins.length) return <Empty resourceName="cabins" />;
 
   // 1) FILTER
   const filterValue = searchParams.get("discount") || "all";
@@ -23,7 +26,6 @@ export default function CabinTable() {
 
   // 2) SORT
   const sortBy = searchParams.get("sortBy") || "startDate-asc";
-  console.log(sortBy);
 
   const [field, direction] = sortBy.split("-");
   const modifier = direction === "asc" ? 1 : -1;
